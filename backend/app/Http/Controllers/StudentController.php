@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
@@ -13,23 +14,44 @@ class StudentController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $student = Student::create($request->all());
+{
+    $data = $request->all();
 
-        return response()->json($student, 201);
+    if ($request->hasFile('photo')) {
+        $data['photo'] = $request
+            ->file('photo')
+            ->store('students', 'public');
     }
+
+    $student = Student::create($data);
+
+    return response()->json($student, 201);
+}
 
     public function show(Student $student)
     {
         return $student;
     }
 
-    public function update(Request $request, Student $student)
-    {
-        $student->update($request->all());
+public function update(Request $request, Student $student)
+{
+    $data = $request->all();
 
-        return $student;
+    if ($request->hasFile('photo')) {
+
+        if ($student->photo) {
+            Storage::disk('public')->delete($student->photo);
+        }
+
+        $data['photo'] = $request
+            ->file('photo')
+            ->store('students', 'public');
     }
+
+    $student->update($data);
+
+    return $student;
+}
 
     public function destroy(Student $student)
     {

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Attendance;
 
 class Student extends Model
 {
@@ -17,7 +18,18 @@ class Student extends Model
         'parent_phone',
         'class',
         'section',
+        'school_class_id',
         'photo',
         'active'
     ];
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function schoolClass()
+    {
+        return $this->belongsTo(SchoolClass::class);
+    }
 }
