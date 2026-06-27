@@ -1,84 +1,74 @@
 import { useState } from "react";
 
+import DashboardLayout from "./layouts/DashboardLayout";
+
+import Dashboard from "./pages/Dashboard";
 import Students from "./pages/Students";
 import Teachers from "./pages/Teachers";
 import Subjects from "./pages/Subjects";
-import Assignments from "./pages/Assignments";
 import Classes from "./pages/Classes";
-import ClassSubjects from "./pages/ClassSubjects";
-import Timetables from "./pages/Timetables";
+import Assignments from "./pages/Assignments";
 import Attendance from "./pages/Attendance";
+import Timetables from "./pages/Timetables";
 import Exams from "./pages/Exams";
 import Marks from "./pages/Marks";
+import ReportCard from "./pages/ReportCard";
 
-function App() {
+export default function App() {
 
-    const [page, setPage] = useState("students");
+    const [page, setPage] = useState("dashboard");
+
+    function renderPage() {
+
+        switch (page) {
+
+            case "dashboard":
+                return <Dashboard />;
+
+            case "students":
+                return <Students />;
+
+            case "teachers":
+                return <Teachers />;
+
+            case "subjects":
+                return <Subjects />;
+
+            case "classes":
+                return <Classes />;
+
+            case "assignments":
+                return <Assignments />;
+
+            case "attendance":
+                return <Attendance />;
+
+            case "timetables":
+                return <Timetables />;
+
+            case "exams":
+                return <Exams />;
+
+            case "marks":
+                return <Marks />;
+
+            case "reportcard":
+                return <ReportCard />;
+
+            default:
+                return <Dashboard />;
+        }
+
+    }
 
     return (
 
-        <div>
+        <DashboardLayout setPage={setPage}>
 
-            <div
-                style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: "10px",
-                    padding: "10px",
-                    borderBottom: "1px solid #ccc",
-                    marginBottom: "20px"
-                }}
-            >
+            {renderPage()}
 
-                <button onClick={() => setPage("students")}>Students</button>
-
-                <button onClick={() => setPage("teachers")}>Teachers</button>
-
-                <button onClick={() => setPage("subjects")}>Subjects</button>
-
-                <button onClick={() => setPage("assignments")}>
-                    Teacher Assignments
-                </button>
-
-                <button onClick={() => setPage("classes")}>Classes</button>
-
-                <button onClick={() => setPage("classsubjects")}>
-                    Class Subjects
-                </button>
-
-                <button onClick={() => setPage("timetables")}>
-                    Timetables
-                </button>
-
-                <button onClick={() => setPage("attendance")}>
-                    Attendance
-                </button>
-
-                <button onClick={() => setPage("exams")}>
-                    Exams
-                </button>
-
-                <button onClick={() => setPage("marks")}>
-                    Marks
-                </button>
-
-            </div>
-
-            {page === "students" && <Students />}
-            {page === "teachers" && <Teachers />}
-            {page === "subjects" && <Subjects />}
-            {page === "assignments" && <Assignments />}
-            {page === "classes" && <Classes />}
-            {page === "classsubjects" && <ClassSubjects />}
-            {page === "timetables" && <Timetables />}
-            {page === "attendance" && <Attendance />}
-            {page === "exams" && <Exams />}
-            {page === "marks" && <Marks />}
-
-        </div>
+        </DashboardLayout>
 
     );
 
 }
-
-export default App;

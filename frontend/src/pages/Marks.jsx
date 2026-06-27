@@ -6,13 +6,15 @@ export default function Marks() {
     const [exams, setExams] = useState([]);
     const [classes, setClasses] = useState([]);
     const [subjects, setSubjects] = useState([]);
+    const [teachers, setTeachers] = useState([]);
+
     const [students, setStudents] = useState([]);
+    const [marks, setMarks] = useState([]);
 
     const [selectedExam, setSelectedExam] = useState("");
     const [selectedClass, setSelectedClass] = useState("");
     const [selectedSubject, setSelectedSubject] = useState("");
-
-    const [marks, setMarks] = useState([]);
+    const [selectedTeacher, setSelectedTeacher] = useState("");
 
     useEffect(() => {
         loadData();
@@ -25,14 +27,16 @@ export default function Marks() {
             const examsRes = await api.get("/exams");
             const classesRes = await api.get("/classes");
             const subjectsRes = await api.get("/subjects");
+            const teachersRes = await api.get("/teachers");
 
             setExams(examsRes.data);
             setClasses(classesRes.data);
             setSubjects(subjectsRes.data);
+            setTeachers(teachersRes.data);
 
-        } catch (err) {
+        } catch (error) {
 
-            console.error(err);
+            console.error(error);
 
         }
 
@@ -41,68 +45,15 @@ export default function Marks() {
     async function loadStudents() {
 
         if (!selectedClass) {
-
-            alert("Select a class first.");
-
+            alert("Please select a class.");
             return;
-
-        }
-async function saveMarks() {
-
-    if (!selectedExam) {
-
-        alert("Select an exam.");
-
-        return;
-
-    }
-
-    if (!selectedSubject) {
-
-        alert("Select a subject.");
-
-        return;
-
-    }
-
-    try {
-
-        for (let i = 0; i < marks.length; i++) {
-
-            if (marks[i].score === "") continue;
-
-            await api.post("/marks", {
-
-                student_id: marks[i].student_id,
-
-                exam_id: selectedExam,
-
-                subject_id: selectedSubject,
-
-                teacher_id: 1,
-
-                score: Number(marks[i].score)
-
-            });
-
         }
 
-        alert("Marks saved successfully.");
-
-    } catch (err) {
-
-        console.error(err);
-
-        alert("Unable to save marks.");
-
-    }
-
-}
         try {
 
-            const res = await api.get("/students");
+            const response = await api.get("/students");
 
-            const filtered = res.data.filter(student =>
+            const filtered = response.data.filter(student =>
                 Number(student.school_class_id) === Number(selectedClass)
             );
 
@@ -115,9 +66,59 @@ async function saveMarks() {
                 }))
             );
 
-        } catch (err) {
+        } catch (error) {
 
-            console.error(err);
+            console.error(error);
+
+        }
+
+    }
+
+    function updateScore(index, value) {
+
+        const copy = [...marks];
+
+        copy[index].score = value;
+
+        setMarks(copy);
+
+    }
+
+    async function saveMarks() {
+
+        if (
+            !selectedExam ||
+            !selectedSubject ||
+            !selectedTeacher
+        ) {
+            alert("Please complete all selections.");
+            return;
+        }
+
+        try {
+
+            for (const mark of marks) {
+
+                if (mark.score === "") continue;
+
+await api.post("/marks", {
+    student_id: mark.student_id,
+    school_class_id: selectedClass,
+    exam_id: selectedExam,
+    subject_id: selectedSubject,
+    teacher_id: selectedTeacher,
+    score: mark.score
+});
+
+            }
+
+            alert("Marks saved successfully.");
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert("Unable to save marks.");
 
         }
 
@@ -125,15 +126,15 @@ async function saveMarks() {
 
     return (
 
-        <div style={{ padding: "20px" }}>
+        <div style={{ padding: 20 }}>
 
-            <h2>Student Marks Entry</h2>
+            <h2>Marks Entry</h2>
 
             <div
                 style={{
-                    display: "flex",
+                    display: "grid",
+                    gridTemplateColumns: "repeat(4,1fr)",
                     gap: "10px",
-                    flexWrap: "wrap",
                     marginBottom: "20px"
                 }}
             >
@@ -163,13 +164,13 @@ async function saveMarks() {
                 >
                     <option value="">Select Class</option>
 
-                    {classes.map(cls => (
+                    {classes.map(item => (
 
                         <option
-                            key={cls.id}
-                            value={cls.id}
+                            key={item.id}
+                            value={item.id}
                         >
-                            {cls.name} {cls.section}
+                            {item.name} {item.section}
                         </option>
 
                     ))}
@@ -195,71 +196,149 @@ async function saveMarks() {
 
                 </select>
 
-                <button onClick={loadStudents}>
-                    Load Students
-                </button>
+                <select
+                    value={selectedTeacher}
+                    onChange={(e) => setSelectedTeacher(e.target.value)}
+                >
+                    <option value="">Select Teacher</option>
 
-<br />
+                    {teachers.map(teacher => (
 
-<button onClick={saveMarks}>
-    Save All Marks
-</button>
+                        <option
+                            key={teacher.id}
+                            value={teacher.id}
+                        >
+                            {teacher.first_name} {teacher.last_name}
+                        </option>
+
+                    ))}
+
+                </select>
 
             </div>
+            <button
+                onClick={loadStudents}
+                style={{
+                    marginTop: "20px",
+                    padding: "10px 20px",
+                    cursor: "pointer"
+                }}
+            >
+                Load Students
+            </button>
 
-            <table border="1" cellPadding="8">
+            <br />
+            <br />
 
-                <thead>
+            {students.length > 0 && (
 
-                    <tr>
+                <>
 
-                        <th>Matricule</th>
-                        <th>Student</th>
-                        <th>Score</th>
+                    <table
+                        style={{
+                            width: "100%",
+                            borderCollapse: "collapse"
+                        }}
+                    >
 
-                    </tr>
+                        <thead>
 
-                </thead>
+                            <tr>
 
-<tbody>
+                                <th style={{ border: "1px solid #ccc", padding: 10 }}>
+                                    Matricule
+                                </th>
 
-    {students.map((student, index) => (
+                                <th style={{ border: "1px solid #ccc", padding: 10 }}>
+                                    Student
+                                </th>
 
-        <tr key={student.id}>
+                                <th style={{ border: "1px solid #ccc", padding: 10 }}>
+                                    Score
+                                </th>
 
-            <td>{student.matricule}</td>
+                            </tr>
 
-            <td>
-                {student.first_name} {student.last_name}
-            </td>
+                        </thead>
 
-            <td>
+                        <tbody>
 
-                <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={marks[index]?.score || ""}
-                    onChange={(e) => {
+                            {students.map((student, index) => (
 
-                        const updated = [...marks];
+                                <tr key={student.id}>
 
-                        updated[index].score = e.target.value;
+                                    <td
+                                        style={{
+                                            border: "1px solid #ccc",
+                                            padding: 10
+                                        }}
+                                    >
+                                        {student.matricule}
+                                    </td>
 
-                        setMarks(updated);
+                                    <td
+                                        style={{
+                                            border: "1px solid #ccc",
+                                            padding: 10
+                                        }}
+                                    >
+                                        {student.first_name} {student.last_name}
+                                    </td>
 
-                    }}
-                />
+                                    <td
+                                        style={{
+                                            border: "1px solid #ccc",
+                                            padding: 10
+                                        }}
+                                    >
 
-            </td>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            value={marks[index]?.score || ""}
+                                            onChange={(e) =>
+                                                updateScore(
+                                                    index,
+                                                    e.target.value
+                                                )
+                                            }
+                                            style={{
+                                                width: "80px",
+                                                padding: "6px"
+                                            }}
+                                        />
 
-        </tr>
+                                    </td>
 
-    ))}
+                                </tr>
 
-</tbody>
+                            ))}
 
-            </table>
+                        </tbody>
+
+                    </table>
+
+                    <br />
+
+                    <button
+                        onClick={saveMarks}
+                        style={{
+                            padding: "12px 25px",
+                            background: "#2563eb",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            fontWeight: "bold"
+                        }}
+                    >
+                        Save Marks
+                    </button>
+
+                </>
+
+            )}
 
         </div>
 
