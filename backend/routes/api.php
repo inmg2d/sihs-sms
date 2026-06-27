@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClassTeacherSubjectController;
 use App\Http\Controllers\StudentController;
@@ -12,8 +13,14 @@ use App\Http\Controllers\TimetableController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\MarkController;
-use App\Http\Controllers\ReportController;
 
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ResultController;
+
+Route::get(
+    'reportcard/{student}/{exam}',
+    [ReportCardController::class, 'show']
+);
 Route::apiResource('attendances', AttendanceController::class)
      ->only(['index', 'store', 'destroy']);
 Route::apiResource('exams', ExamController::class);
@@ -23,6 +30,9 @@ Route::post('/class-subjects', [ClassSubjectController::class, 'store']);
 Route::delete('/class-subjects/{class}/{subject}', [ClassSubjectController::class, 'destroy']);
 Route::get('/class-teacher-subjects', [ClassTeacherSubjectController::class, 'index']);
 Route::apiResource('marks', MarkController::class);
+Route::get('/results/student/{student}', [ResultController::class, 'student']);
+Route::get('/results/class/{class}', [ResultController::class, 'class']);
+Route::get('/results/ranking/{class}/{exam}', [ResultController::class, 'ranking']);
 Route::post(
     '/reports/generate/{exam}',
     [ReportController::class, 'generate']
@@ -47,3 +57,5 @@ Route::apiResource('classes', SchoolClassController::class);
 Route::get('/assignments', [AssignmentController::class, 'index']);
 Route::post('/assignments', [AssignmentController::class, 'store']);
 Route::delete('/assignments/{teacher}/{subject}', [AssignmentController::class, 'destroy']);
+
+Route::get('/dashboard', [DashboardController::class, 'index']);

@@ -8,10 +8,14 @@ class Mark extends Model
 {
     protected $fillable = [
         'student_id',
+        'school_class_id',
         'exam_id',
         'subject_id',
         'teacher_id',
-        'score'
+        'score',
+        'grade',
+        'remark',
+        'points'
     ];
 
     public function student()

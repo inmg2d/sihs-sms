@@ -4,9 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Mark;
 use Illuminate\Http\Request;
+use App\Services\GradingService;
 
 class MarkController extends Controller
 {
+    protected $gradingService;
+
+    public function __construct(GradingService $gradingService)
+    {
+        $this->gradingService = $gradingService;
+    }
+
     public function index()
     {
         return Mark::with([
@@ -19,13 +27,20 @@ class MarkController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'student_id' => 'required|exists:students,id',
-            'exam_id' => 'required|exists:exams,id',
-            'subject_id' => 'required|exists:subjects,id',
-            'teacher_id' => 'required|exists:teachers,id',
-            'score' => 'required|numeric|min:0|max:100',
-        ]);
+$validated = $request->validate([
+    'student_id'      => 'required|exists:students,id',
+    'school_class_id' => 'required|exists:school_classes,id',
+    'exam_id'         => 'required|exists:exams,id',
+    'subject_id'      => 'required|exists:subjects,id',
+    'teacher_id'      => 'required|exists:teachers,id',
+    'score'           => 'required|numeric|min:0|max:100',
+]);
+
+        $grading = $this->gradingService->calculate($validated['score']);
+
+        $validated['grade'] = $grading['grade'];
+        $validated['remark'] = $grading['remark'];
+        $validated['points'] = $grading['points'];
 
         return Mark::updateOrCreate(
             [
