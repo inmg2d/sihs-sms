@@ -13,10 +13,15 @@ use App\Http\Controllers\TimetableController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\MarkController;
-
+use App\Http\Controllers\FeeCategoryController;
+use App\Http\Controllers\FeeStructureController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResultController;
+use App\Http\Controllers\ReportCardController;
+use App\Http\Controllers\StudentBillController;
 
+Route::apiResource('student-bills', StudentBillController::class);
+Route::apiResource('fee-structures', FeeStructureController::class);
 Route::get(
     'reportcard/{student}/{exam}',
     [ReportCardController::class, 'show']
@@ -27,6 +32,7 @@ Route::apiResource('exams', ExamController::class);
 Route::apiResource('timetables', TimetableController::class);
 Route::get('/class-subjects', [ClassSubjectController::class, 'index']);
 Route::post('/class-subjects', [ClassSubjectController::class, 'store']);
+Route::apiResource('fee-categories', FeeCategoryController::class);
 Route::delete('/class-subjects/{class}/{subject}', [ClassSubjectController::class, 'destroy']);
 Route::get('/class-teacher-subjects', [ClassTeacherSubjectController::class, 'index']);
 Route::apiResource('marks', MarkController::class);
@@ -59,3 +65,4 @@ Route::post('/assignments', [AssignmentController::class, 'store']);
 Route::delete('/assignments/{teacher}/{subject}', [AssignmentController::class, 'destroy']);
 
 Route::get('/dashboard', [DashboardController::class, 'index']);
+Route::apiResource('fee-structures', FeeStructureController::class);
