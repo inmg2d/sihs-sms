@@ -1,6 +1,19 @@
 <?php
 
+use App\Http\Controllers\SchoolProfileController;
+use App\Http\Controllers\Auth\AuthController;
+
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get('/me', [AuthController::class, 'me']);
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+});
 use App\Http\Controllers\DashboardController;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClassTeacherSubjectController;
 use App\Http\Controllers\StudentController;
@@ -20,6 +33,7 @@ use App\Http\Controllers\ResultController;
 use App\Http\Controllers\ReportCardController;
 use App\Http\Controllers\StudentBillController;
 
+Route::apiResource('school-profile', SchoolProfileController::class);
 Route::apiResource('student-bills', StudentBillController::class);
 Route::apiResource('fee-structures', FeeStructureController::class);
 Route::get(

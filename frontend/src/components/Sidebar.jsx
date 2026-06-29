@@ -1,97 +1,169 @@
-export default function Sidebar({ setPage }) {
+import { NavLink } from "react-router-dom";
+
+export default function Sidebar() {
     return (
         <div
             style={{
-                width: "250px",
-                background: "#b30000",
+                width: "260px",
+                background: "#8B0000",
                 color: "#fff",
                 minHeight: "100vh",
                 padding: "20px",
-                boxSizing: "border-box",
-                overflowY: "auto"
+                overflowY: "auto",
+                boxSizing: "border-box"
             }}
         >
-            <div style={{ textAlign: "center", marginBottom: "30px" }}>
+            <div
+                style={{
+                    textAlign: "center",
+                    marginBottom: "30px"
+                }}
+            >
                 <img
                     src="/logo.jpeg"
-                    alt="SIHS Logo"
+                    alt="SIHS"
                     style={{
                         width: "90px",
                         marginBottom: "10px"
                     }}
                 />
 
-                <h2
-                    style={{
-                        margin: 0,
-                        fontSize: "18px"
-                    }}
-                >
-                    SIHS
+                <h2 style={{ margin: 0 }}>
+                    SIHS ERP
                 </h2>
 
                 <small>
-                    Educating the Mind and Heart
+                    Saint Isidore High School Ndop
                 </small>
             </div>
 
-            <MenuButton title="Dashboard" page="dashboard" setPage={setPage} />
+            <MenuLink title="Dashboard" to="/dashboard" />
 
-            <hr />
+            <Section title="ACADEMICS" />
 
-            <h4>Academics</h4>
+            <MenuLink title="Students" to="/students" />
+            <MenuLink title="Teachers" to="/teachers" />
+            <MenuLink title="Classes" to="/classes" />
+            <MenuLink title="Subjects" to="/subjects" />
+            <MenuLink title="Assignments" to="/assignments" />
+            <MenuLink title="Attendance" to="/attendance" />
+            <MenuLink title="Timetable" to="/timetables" />
 
-            <MenuButton title="Students" page="students" setPage={setPage} />
+            <Section title="EXAMINATIONS" />
 
-            <MenuButton title="Teachers" page="teachers" setPage={setPage} />
+            <MenuLink title="Exams" to="/exams" />
+            <MenuLink title="Marks Entry" to="/marks" />
+            <MenuLink title="Report Cards" to="/reportcard" />
 
-            <MenuButton title="Classes" page="classes" setPage={setPage} />
+            <Section title="FINANCE & BURSARY" />
 
-            <MenuButton title="Subjects" page="subjects" setPage={setPage} />
+            <MenuLink
+                title="Finance Dashboard"
+                to="/finance"
+            />
 
-            <MenuButton title="Assignments" page="assignments" setPage={setPage} />
+            <MenuLink
+                title="Fee Categories"
+                to="/finance/fee-categories"
+            />
 
-            <MenuButton title="Attendance" page="attendance" setPage={setPage} />
+            <MenuLink
+                title="Fee Structure"
+                to="/finance/fee-structure"
+            />
 
-            <MenuButton title="Timetable" page="timetables" setPage={setPage} />
+            <MenuLink
+                title="Student Billing"
+                to="/finance/student-billing"
+            />
 
-            <hr />
+            <MenuLink
+                title="Collect Fees"
+                to="/finance/collect-fees"
+            />
 
-            <h4>Examinations</h4>
+            <MenuLink
+                title="Receipts"
+                to="/finance/receipts"
+            />
 
-            <MenuButton title="Exams" page="exams" setPage={setPage} />
+            <MenuLink
+                title="Finance Reports"
+                to="/finance/reports"
+            />
 
-            <MenuButton title="Marks Entry" page="marks" setPage={setPage} />
+            <Section title="LIBRARY" />
 
-            <MenuButton title="Report Cards" page="reportcard" setPage={setPage} />
+            <MenuLink title="Library" to="/library" />
 
-            <hr />
+            <Section title="HOSTEL" />
 
-            <h4>Administration</h4>
+            <MenuLink title="Hostel" to="/hostel" />
 
-            <MenuButton title="Settings" page="settings" setPage={setPage} />
+            <Section title="TRANSPORT" />
+
+            <MenuLink title="Transport" to="/transport" />
+
+            <Section title="CLINIC" />
+
+            <MenuLink title="Clinic" to="/clinic" />
+
+            <Section title="INVENTORY" />
+
+            <MenuLink title="Inventory" to="/inventory" />
+
+            <Section title="HR & PAYROLL" />
+
+            <MenuLink title="Payroll" to="/dashboard" />
+
+            <Section title="SYSTEM" />
+
+            <MenuLink title="Settings" to="/settings" />
         </div>
     );
 }
 
-function MenuButton({ title, page, setPage }) {
+function Section({ title }) {
     return (
-        <button
-            onClick={() => setPage(page)}
-            style={{
-                width: "100%",
+        <>
+            <hr
+                style={{
+                    marginTop: "20px",
+                    marginBottom: "10px",
+                    borderColor: "#ffffff44"
+                }}
+            />
+
+            <h4
+                style={{
+                    color: "#FFD700",
+                    marginBottom: "10px",
+                    fontSize: "14px"
+                }}
+            >
+                {title}
+            </h4>
+        </>
+    );
+}
+
+function MenuLink({ title, to }) {
+    return (
+        <NavLink
+            to={to}
+            style={({ isActive }) => ({
+                display: "block",
                 padding: "12px",
                 marginBottom: "8px",
-                border: "none",
                 borderRadius: "6px",
-                background: "#ffffff22",
+                textDecoration: "none",
                 color: "#fff",
-                cursor: "pointer",
-                textAlign: "left",
-                fontSize: "15px"
-            }}
+                background: isActive ? "#ffffff55" : "#ffffff20",
+                fontWeight: isActive ? "bold" : "normal",
+                transition: "0.2s"
+            })}
         >
             {title}
-        </button>
+        </NavLink>
     );
 }

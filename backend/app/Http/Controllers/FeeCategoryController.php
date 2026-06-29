@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 
 class FeeCategoryController extends Controller
 {
-    public function index()
-    {
-        return FeeCategory::orderBy('name')->get();
-    }
+public function index()
+{
+    return response()->json(
+        FeeCategory::orderBy('name')->get()
+    );
+}
 
     public function store(Request $request)
     {

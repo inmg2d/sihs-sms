@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export default axios.create({
-    baseURL: "http://api.sihs.online/api"
+baseURL: "https://api.sihs.online/api"
 });

@@ -1,0 +1,9 @@
+{
+    name: "Finance",
+    children: [
+        {
+            name: "Fee Categories",
+            path: "/finance/categories",
+        },
+    ],
+}

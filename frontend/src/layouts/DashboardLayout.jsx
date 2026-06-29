@@ -1,10 +1,8 @@
+import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 
-export default function DashboardLayout({
-    setPage,
-    children
-}) {
+export default function DashboardLayout() {
 
     return (
 
@@ -16,7 +14,7 @@ export default function DashboardLayout({
             }}
         >
 
-            <Sidebar setPage={setPage} />
+            <Sidebar />
 
             <div
                 style={{
@@ -28,16 +26,17 @@ export default function DashboardLayout({
 
                 <Topbar />
 
-                <div
+                <main
                     style={{
                         flex: 1,
-                        padding: "20px"
+                        padding: "20px",
+                        overflow: "auto"
                     }}
                 >
 
-                    {children}
+                    <Outlet />
 
-                </div>
+                </main>
 
             </div>
 
